@@ -1,0 +1,3 @@
+# ⚡️ type
+
+real time typing

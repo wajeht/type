@@ -1,0 +1,53 @@
+@keyframes blink {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.CodeMirror {
+	height: 100vh;
+	font-size: 20px;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro',
+		monospace !important;
+}
+
+#remote-cursor {
+	position: absolute;
+	background-color: rgba(0, 0, 255, 0.5);
+	width: 2px;
+	animation: blink 1.3s step-end infinite;
+}
+
+footer {
+	z-index: 2;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+footer p {
+	text-align: center;
+	padding: 15px;
+	font-size: small;
+	width: fit-content;
+	margin: 0 auto;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro',
+		monospace !important;
+}
+
+@media screen and (max-width: 600px) {
+	footer p {
+		background-color: white;
+	}
+}

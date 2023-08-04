@@ -1,0 +1,23 @@
+node_modules
+coverage
+logs
+mongo-data
+coverage*/
+lib/
+pnpm-lock.yaml
+# See https://github.com/all-contributors/cli/issues/347
+.all-contributorsrc
+package-lock.json
+src/views/components.d.ts
+src/views/auto-imports.d.ts
+public/socket.io.min.js
+public/codemirror.min.css
+public/codemirror.min.js
+public/javascript-hint.min.js
+public/javascript.min.js
+public/socket.io.min.js
+public/show-hint.min.css
+public/show-hint.min.js
+public/vim.min.js
+public/libs/*
+public/libs
