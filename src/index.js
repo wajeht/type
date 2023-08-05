@@ -75,7 +75,11 @@ app.use(compression());
 app.use(express.json());
 app.disable('x-powered-by');
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.resolve(path.join(process.cwd(), 'public'))));
+app.use(
+	express.static(path.resolve(path.join(process.cwd(), 'public')), {
+		maxAge: '1y',
+	}),
+);
 
 app.get('/', async (req, res) => {
 	try {
