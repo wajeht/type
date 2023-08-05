@@ -1,7 +1,6 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import sirv from 'sirv';
 import fs from 'fs/promises';
 import express from 'express';
 import path from 'path';
@@ -71,17 +70,12 @@ app.use(
 		},
 	}),
 );
-app.disable('x-powered-by');
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(compression());
-app.use(
-	sirv('public', {
-		dev: process.env.NODE_ENV === 'development',
-		maxAge: 31536000, // 1 year
-	}),
-);
+app.use(express.json());
+app.disable('x-powered-by');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.resolve(path.join(process.cwd(), 'public'))));
 
 app.get('/', async (req, res) => {
 	try {
