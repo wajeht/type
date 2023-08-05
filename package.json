@@ -6,7 +6,7 @@
 	"main": "./src/index.js",
 	"scripts": {
 		"dev": "nodemon ./src/index.js",
-		"start": "node NODE_ENV=production ./src/index.js",
+		"start": "NODE_ENV=production && node ./src/index.js",
 		"format:check": "prettier --check .",
 		"format": "prettier --write ."
 	},
