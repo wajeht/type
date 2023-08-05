@@ -6,6 +6,7 @@ import fs from 'fs/promises';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import compression from 'compression';
 import helmet from 'helmet';
 
 const app = express();
@@ -70,10 +71,11 @@ app.use(
 		},
 	}),
 );
+app.disable('x-powered-by');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.disable('x-powered-by');
+app.use(compression());
 app.use(
 	sirv('public', {
 		dev: process.env.NODE_ENV === 'development',
