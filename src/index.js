@@ -13,6 +13,9 @@ const server = createServer(app);
 const io = new Server(server);
 
 const PORT = 8080;
+let DEFAULT_MESSAGE = `Welcome to the collaborative code editor in JavaScript with Vim keybindings!\n\n`;
+DEFAULT_MESSAGE += `Open this page in another browser/tab/phone and start coding together!\n\n`;
+
 let lastMessage = '';
 let lastSelection = [];
 let sockets = new Set();
@@ -103,8 +106,17 @@ io.on('connection', (socket) => {
 	socket.on('disconnect', () => {
 		sockets.delete(socket);
 		console.log('user disconnected');
+		resetToDefaultMessage();
 	});
 });
+
+function resetToDefaultMessage() {
+	if (sockets.size === 0) {
+		lastMessage = DEFAULT_MESSAGE;
+		lastCursorPosition = { line: 0, ch: 0 };
+		lastSelection = [];
+	}
+}
 
 function gracefulShutdown() {
 	console.log('Received kill signal, shutting down gracefully.');
