@@ -13,8 +13,9 @@ const server = createServer(app);
 const io = new Server(server);
 
 const PORT = 8080;
-let DEFAULT_MESSAGE = `Welcome to the collaborative code editor in JavaScript with Vim keybindings!\n\n`;
-DEFAULT_MESSAGE += `Open this page in another browser/tab/phone and start coding together!\n\n`;
+let DEFAULT_MESSAGE = `// Welcome to the collaborative code editor in JavaScript with Vim keybindings!\n`;
+DEFAULT_MESSAGE += `// Open this page in another browser/tab/phone and start coding together!\n\n`;
+DEFAULT_MESSAGE += `console.log('Hello, World!');`;
 
 let lastMessage = '';
 let lastSelection = [];
