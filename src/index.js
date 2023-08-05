@@ -18,49 +18,6 @@ let lastSelection = [];
 let sockets = new Set();
 let lastCursorPosition = { line: 0, ch: 0 };
 
-io.on('connection', (socket) => {
-	sockets.add(socket);
-	console.log('a user connected');
-
-	socket.on('vim-mode-change', (mode) => {
-		socket.broadcast.emit('vim-mode-change', mode);
-	});
-
-	socket.on('getLastMessage', () => {
-		socket.emit('message', {
-			value: lastMessage,
-			cursorPosition: lastCursorPosition,
-			selection: lastSelection,
-		});
-	});
-
-	socket.on('message', (data) => {
-		console.log('Received message:', data.value);
-		lastMessage = data.value;
-		lastCursorPosition = data.cursorPosition;
-		lastSelection = data.selection;
-		socket.broadcast.emit('message', {
-			value: lastMessage,
-			cursorPosition: lastCursorPosition,
-			selection: lastSelection,
-		});
-	});
-
-	socket.on('cursorActivity', (data) => {
-		lastCursorPosition = data.cursorPosition;
-		lastSelection = data.selection;
-		socket.broadcast.emit('cursorActivity', {
-			cursorPosition: lastCursorPosition,
-			selection: lastSelection,
-		});
-	});
-
-	socket.on('disconnect', () => {
-		sockets.delete(socket);
-		console.log('user disconnected');
-	});
-});
-
 app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
@@ -104,6 +61,49 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
 	console.error(err.stack);
 	return res.status(500).send('Something broke!');
+});
+
+io.on('connection', (socket) => {
+	sockets.add(socket);
+	console.log('a user connected');
+
+	socket.on('vim-mode-change', (mode) => {
+		socket.broadcast.emit('vim-mode-change', mode);
+	});
+
+	socket.on('getLastMessage', () => {
+		socket.emit('message', {
+			value: lastMessage,
+			cursorPosition: lastCursorPosition,
+			selection: lastSelection,
+		});
+	});
+
+	socket.on('message', (data) => {
+		console.log('Received message:', data.value);
+		lastMessage = data.value;
+		lastCursorPosition = data.cursorPosition;
+		lastSelection = data.selection;
+		socket.broadcast.emit('message', {
+			value: lastMessage,
+			cursorPosition: lastCursorPosition,
+			selection: lastSelection,
+		});
+	});
+
+	socket.on('cursorActivity', (data) => {
+		lastCursorPosition = data.cursorPosition;
+		lastSelection = data.selection;
+		socket.broadcast.emit('cursorActivity', {
+			cursorPosition: lastCursorPosition,
+			selection: lastSelection,
+		});
+	});
+
+	socket.on('disconnect', () => {
+		sockets.delete(socket);
+		console.log('user disconnected');
+	});
 });
 
 function gracefulShutdown() {
