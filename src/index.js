@@ -70,14 +70,17 @@ app.use(
 		},
 	}),
 );
+
+app.disable('x-powered-by');
+
 app.use(cors());
 app.use(compression());
 app.use(express.json());
-app.disable('x-powered-by');
 app.use(express.urlencoded({ extended: true }));
 app.use(
 	express.static(path.resolve(path.join(process.cwd(), 'public')), {
-		maxAge: '1y',
+		// 30 days in miliseconds
+		maxAge: 30 * 24 * 60 * 60 * 1000,
 	}),
 );
 
