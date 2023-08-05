@@ -74,7 +74,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.disable('x-powered-by');
-app.use(sirv('public', { dev: process.env.NODE_ENV === 'development' }));
+app.use(
+	sirv('public', {
+		dev: process.env.NODE_ENV === 'development',
+		maxAge: 31536000, // 1 year
+	}),
+);
 
 app.get('/', async (req, res) => {
 	try {
