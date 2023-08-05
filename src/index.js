@@ -1,6 +1,8 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
+import sirv from 'sirv';
+import fs from 'fs/promises';
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
@@ -72,12 +74,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.disable('x-powered-by');
-app.use(express.static(path.join(process.cwd(), 'public')));
+app.use(sirv('public'));
 
-app.get('/', (req, res) => {
-	res.setHeader('Content-Type', 'text/html');
-	const html = path.resolve(path.join(process.cwd(), 'public', 'index.html'));
-	return res.status(200).sendFile(html);
+app.get('/', async (req, res) => {
+	try {
+		const index = path.resolve(
+			path.join(process.cwd(), 'public', 'index.html'),
+		);
+		const html = await fs.readFile(index, 'utf-8');
+		return res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 app.use((req, res, next) => {
