@@ -56,6 +56,8 @@ const myCodeMirror = CodeMirror(document.body, {
 	lineWrapping: true,
 });
 
+myCodeMirror.focus();
+
 let remoteCursor = document.getElementById('remote-cursor');
 
 if (!remoteCursor) {
