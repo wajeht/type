@@ -74,7 +74,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.disable('x-powered-by');
-app.use(sirv('public'));
+app.use(sirv('public', { dev: process.env.NODE_ENV === 'development' }));
 
 app.get('/', async (req, res) => {
 	try {
