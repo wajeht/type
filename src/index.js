@@ -29,6 +29,7 @@ const rateLimiterMiddleware = rateLimit({
 	skip: skipOnMyIp,
 });
 
+app.set('trust proxy', true);
 app.use(rateLimiterMiddleware);
 
 app.use(
