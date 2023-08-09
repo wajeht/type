@@ -150,18 +150,22 @@ server.listen(PORT, () => {
 function gracefulShutdown() {
 	console.log('Received kill signal, shutting down gracefully.');
 
-	sockets.forEach((socket) => {
-		socket.disconnect(true);
-	});
+	try {
+		sockets.forEach((socket) => {
+			socket.disconnect(true);
+		});
 
-	io.close(() => {
-		console.log('Socket.io closed.');
-	});
+		io.close(() => {
+			console.log('Socket.io closed.');
+		});
 
-	server.close(() => {
-		console.log('Closed out remaining connections.');
-		process.exit();
-	});
+		server.close(() => {
+			console.log('Closed out remaining connections.');
+			process.exit();
+		});
+	} catch (error) {
+		console.error('Error during shutdown', error);
+	}
 
 	setTimeout(() => {
 		console.error(
@@ -171,5 +175,9 @@ function gracefulShutdown() {
 	}, 10 * 1000);
 }
 
-process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
+
+process.on('unhandledRejection', (reason, promise) => {
+	console.error('Unhandled Rejection at: ', promise, ' reason: ', reason);
+});
