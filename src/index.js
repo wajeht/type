@@ -150,6 +150,10 @@ function gracefulShutdown() {
 		socket.disconnect(true);
 	});
 
+	io.close(() => {
+        console.log('Socket.io closed.');
+    });
+
 	server.close(() => {
 		console.log('Closed out remaining connections.');
 		process.exit();
