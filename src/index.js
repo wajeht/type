@@ -29,6 +29,8 @@ const rateLimiterMiddleware = rateLimit({
 	skip: skipOnMyIp,
 });
 
+
+app.set('trust proxy', true);
 app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
