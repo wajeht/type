@@ -8,7 +8,9 @@
 		"dev": "nodemon ./src/index.js",
 		"start": "NODE_ENV=production && node ./src/index.js",
 		"format:check": "prettier --check .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"lint:check": "eslint .",
+		"lint": "eslint --fix ."
 	},
 	"keywords": [
 		"realtime",
@@ -28,6 +30,7 @@
 		"socket.io": "^4.7.2"
 	},
 	"devDependencies": {
+		"eslint": "^8.46.0",
 		"nodemon": "^3.0.1"
 	}
 }

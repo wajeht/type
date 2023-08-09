@@ -1,0 +1,4 @@
+public/libs
+public/libs/*
+public/lib*
+public/client.js

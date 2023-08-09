@@ -16,7 +16,7 @@ const io = new Server(server);
 const PORT = process.env.PORT || 8080;
 const MY_IP = process.env.MY_IP;
 
-function skipOnMyIp(req, res) {
+function skipOnMyIp(req, _res) {
 	console.log(`my ip was connected: ${req.ip}`);
 	return req.ip === MY_IP && process.env.NODE_ENV === 'production';
 }
@@ -53,7 +53,7 @@ app.use(
 	}),
 );
 
-app.get('/', async (req, res) => {
+app.get('/', async (req, res, next) => {
 	try {
 		const index = path.resolve(
 			path.join(process.cwd(), 'public', 'index.html'),
@@ -73,11 +73,11 @@ app.get('/health-check', (req, res) => {
 	});
 });
 
-app.use((req, res, next) => {
+app.use((req, res, _next) => {
 	return res.status(404).send("Sorry can't find that!");
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
 	console.error(err.stack);
 	return res.status(500).send('Something broke!');
 });
