@@ -1,3 +1,3 @@
 # ⚡️ type
 
-real time typing
+real time javascript code editor
