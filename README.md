@@ -1,3 +1,3 @@
 # ⚡️ type
 
-real time javascript code editor
+real time javascript code editor with vim motion
