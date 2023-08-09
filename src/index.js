@@ -145,7 +145,7 @@ function resetToDefaultMessage() {
 
 export default server;
 
-server.listen(PORT, () => {
+const appServer = server.listen(PORT, () => {
 	console.log(`Server was started at http://localhost:${PORT}`);
 });
 
@@ -164,6 +164,10 @@ function gracefulShutdown() {
 		server.close(() => {
 			console.log('Closed out remaining connections.');
 			process.exit();
+		});
+
+		appServer.close(() => {
+			console.log('Express closed out remaining connections.');
 		});
 	} catch (error) {
 		console.error('Error during shutdown', error);
