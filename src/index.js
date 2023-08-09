@@ -17,6 +17,7 @@ const PORT = process.env.PORT || 8080;
 const MY_IP = process.env.MY_IP;
 
 function skipOnMyIp(req, res) {
+	console.log(`my ip was connected: ${req.ip}`);
 	return req.ip === MY_IP && process.env.NODE_ENV === 'production';
 }
 
