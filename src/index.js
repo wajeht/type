@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
+import rateLimit from 'express-rate-limit';
 import fs from 'fs/promises';
 import express from 'express';
 import path from 'path';
@@ -13,14 +14,21 @@ const server = createServer(app);
 const io = new Server(server);
 
 const PORT = 8080;
-let DEFAULT_MESSAGE = `// Welcome to the collaborative code editor in JavaScript with Vim keybindings!\n`;
-DEFAULT_MESSAGE += `// Open this page in another browser/tab/phone and start coding together!\n\n`;
-DEFAULT_MESSAGE += `console.log('Hello, World!');`;
 
-let lastMessage = '';
-let lastSelection = [];
-let sockets = new Set();
-let lastCursorPosition = { line: 0, ch: 0 };
+function skipHealthCheck(req, res) {
+	return req.originalUrl === '/health-check';
+}
+
+const rateLimiterMiddleware = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true,
+	legacyHeaders: false,
+	message: 'Too many requests, please try again later!',
+	skip: skipHealthCheck,
+});
+
+app.use(rateLimiterMiddleware);
 
 app.use(
 	helmet.contentSecurityPolicy({
@@ -58,6 +66,13 @@ app.get('/', async (req, res) => {
 	}
 });
 
+app.get('/health-check', (req, res) => {
+	return res.status(200).json({
+		message: 'ok',
+		date: new Date(),
+	});
+});
+
 app.use((req, res, next) => {
 	return res.status(404).send("Sorry can't find that!");
 });
@@ -66,6 +81,15 @@ app.use((err, req, res, next) => {
 	console.error(err.stack);
 	return res.status(500).send('Something broke!');
 });
+
+let DEFAULT_MESSAGE = `// Welcome to the collaborative code editor in JavaScript with Vim keybindings!\n`;
+DEFAULT_MESSAGE += `// Open this page in another browser/tab/phone and start coding together!\n\n`;
+DEFAULT_MESSAGE += `console.log('Hello, World!');`;
+
+let lastMessage = '';
+let lastSelection = [];
+let sockets = new Set();
+let lastCursorPosition = { line: 0, ch: 0 };
 
 io.on('connection', (socket) => {
 	sockets.add(socket);
