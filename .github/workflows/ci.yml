@@ -10,7 +10,7 @@ env:
 
 jobs:
   test:
-    name: Test
+    name: Unit tests
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Lint codes
+      - name: Test codes
         run: npm run test
 
   lint:
