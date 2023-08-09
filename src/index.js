@@ -151,8 +151,8 @@ function gracefulShutdown() {
 	});
 
 	io.close(() => {
-        console.log('Socket.io closed.');
-    });
+		console.log('Socket.io closed.');
+	});
 
 	server.close(() => {
 		console.log('Closed out remaining connections.');
