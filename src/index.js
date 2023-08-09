@@ -13,10 +13,11 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
+const MY_IP = process.env.MY_IP;
 
-function skipHealthCheck(req, res) {
-	return req.originalUrl === '/health-check';
+function skipOnMyIp(req, res) {
+	return req.ip === MY_IP && process.env.NODE_ENV === 'production';
 }
 
 const rateLimiterMiddleware = rateLimit({
@@ -25,7 +26,7 @@ const rateLimiterMiddleware = rateLimit({
 	standardHeaders: true,
 	legacyHeaders: false,
 	message: 'Too many requests, please try again later!',
-	skip: skipHealthCheck,
+	skip: skipOnMyIp,
 });
 
 app.use(rateLimiterMiddleware);
