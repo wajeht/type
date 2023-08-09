@@ -39,8 +39,6 @@ app.use(
 	}),
 );
 
-app.disable('x-powered-by');
-
 app.use(cors());
 app.use(compression());
 app.use(express.json());
