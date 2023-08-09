@@ -16,4 +16,9 @@ describe('server', () => {
 		expect(response.status).toBe(200);
 		expect(response.type).toBe('text/html');
 	});
+
+	it('should return not found for unknown routes', async () => {
+		const response = await app.get('/unknown');
+		expect(response.status).toBe(404);
+	});
 });
