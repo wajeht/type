@@ -29,7 +29,6 @@ const rateLimiterMiddleware = rateLimit({
 	skip: skipOnMyIp,
 });
 
-
 app.set('trust proxy', true);
 app.use(
 	helmet.contentSecurityPolicy({
@@ -143,6 +142,10 @@ function resetToDefaultMessage() {
 	}
 }
 
+server.listen(PORT, () => {
+	console.log(`Server was started at http://localhost:${PORT}`);
+});
+
 function gracefulShutdown() {
 	console.log('Received kill signal, shutting down gracefully.');
 
@@ -169,7 +172,3 @@ function gracefulShutdown() {
 
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGINT', gracefulShutdown);
-
-server.listen(PORT, () => {
-	console.log(`Server was started at http://localhost:${PORT}`);
-});
