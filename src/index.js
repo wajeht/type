@@ -29,9 +29,6 @@ const rateLimiterMiddleware = rateLimit({
 	skip: skipOnMyIp,
 });
 
-app.set('trust proxy', true);
-app.use(rateLimiterMiddleware);
-
 app.use(
 	helmet.contentSecurityPolicy({
 		directives: {
@@ -48,6 +45,7 @@ app.use(cors());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(rateLimiterMiddleware);
 app.use(
 	express.static(path.resolve(path.join(process.cwd(), 'public')), {
 		// 30 days in miliseconds
