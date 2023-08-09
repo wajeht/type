@@ -143,6 +143,8 @@ function resetToDefaultMessage() {
 	}
 }
 
+export default server;
+
 server.listen(PORT, () => {
 	console.log(`Server was started at http://localhost:${PORT}`);
 });
