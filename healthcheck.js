@@ -1,4 +1,4 @@
-const http = require('node:http');
+import { request } from 'node:http';
 
 const options = {
 	hostname: 'localhost',
@@ -7,8 +7,7 @@ const options = {
 	method: 'GET',
 };
 
-http
-	.request(options, (res) => {
+request(options, (res) => {
 		let body = '';
 
 		res.on('data', (chunk) => {
