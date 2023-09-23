@@ -1,8 +1,6 @@
 # Stage 1: Build the application
 FROM node:20-alpine AS builder
 
-RUN apk add --no-cache curl
-
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -26,6 +24,6 @@ USER appuser
 
 EXPOSE 8080
 
-HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD ["node", "healthcheck.js"]
 
 CMD ["npm", "start"]

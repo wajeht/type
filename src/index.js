@@ -69,6 +69,7 @@ app.get('/', async (req, res, next) => {
 app.get('/health-check', (req, res) => {
 	return res.status(200).json({
 		message: 'ok',
+		uptime: process.uptime(),
 		date: new Date(),
 	});
 });
