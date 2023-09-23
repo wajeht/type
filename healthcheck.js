@@ -2,7 +2,7 @@ import { request } from 'node:http';
 
 const options = {
 	hostname: 'localhost',
-	port: process.env.PORT,
+	port: 8081,
 	path: '/api/health-check',
 	method: 'GET',
 };
