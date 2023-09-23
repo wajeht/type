@@ -22,8 +22,8 @@ RUN addgroup -g 1001 -S appuser && \
     adduser -u 1001 -S appuser -G appuser
 USER appuser
 
-ARG PORT=${PORT}
-ARG MY_IP=${MY_IP}
+ENV PORT=${PORT}
+ENV MY_IP=${MY_IP}
 
 EXPOSE $PORT
 
