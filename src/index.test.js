@@ -8,7 +8,7 @@ describe('server', () => {
 	it('should be able to hit health check', async () => {
 		const response = await app.get('/health-check');
 		expect(response.status).toBe(200);
-		expect(response.body).toEqual({ message: 'ok', date: expect.any(String) });
+		expect(response.body).toEqual({ message: 'ok', date: expect.any(String), uptime: expect.anything() });
 	});
 
 	it('should be able to get / and return html', async () => {
