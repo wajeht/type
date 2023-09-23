@@ -22,11 +22,9 @@ RUN addgroup -g 1001 -S appuser && \
     adduser -u 1001 -S appuser -G appuser
 USER appuser
 
-# Define the environment variables you need
-ENV PORT=$PORT
-ENV MY_IP=$MY_IP
+ENV PORT=${PORT}
+ENV MY_IP=${MY_IP}
 
-# Echo the environment variables to verify their values
 RUN echo "PORT is set to: $PORT"
 RUN echo "MY_IP is set to: $MY_IP"
 
