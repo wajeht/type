@@ -13,7 +13,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 const MY_IP = process.env.MY_IP;
 
 function skipOnMyIp(req, _res) {
