@@ -1,6 +1,8 @@
 # Stage 1: Build the application
 FROM node:20-alpine AS builder
 
+RUN apk add --no-cache curl
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -23,5 +25,7 @@ RUN addgroup -g 1001 -S appuser && \
 USER appuser
 
 EXPOSE 8080
+
+HEALTHCHECK CMD curl --fail http://localhost:8080 || exit 1
 
 CMD ["npm", "start"]
