@@ -18,7 +18,9 @@ RUN addgroup -g 1001 -S appuser && \
     adduser -u 1001 -S appuser -G appuser
 USER appuser
 
-ENV PORT=${PORT:-6969}
+
+ARG PORT=${PORT}
+ENV PORT=${PORT}
 
 EXPOSE $PORT
 
