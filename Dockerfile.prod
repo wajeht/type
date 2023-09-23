@@ -22,12 +22,15 @@ RUN addgroup -g 1001 -S appuser && \
     adduser -u 1001 -S appuser -G appuser
 USER appuser
 
-ENV PORT=${PORT}
-ENV MY_IP=${MY_IP}
+# Define the environment variables you need
+ENV PORT=$PORT
+ENV MY_IP=$MY_IP
 
-echo $MY_IP
-echo $PORT
+# Echo the environment variables to verify their values
+RUN echo "PORT is set to: $PORT"
+RUN echo "MY_IP is set to: $MY_IP"
 
+# Expose the port specified by the environment variable
 EXPOSE $PORT
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=0s --retries=3 CMD node healthcheck.js
