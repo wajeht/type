@@ -14,11 +14,12 @@ const server = createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 8081;
-const MY_IP = process.env.MY_IP;
 
-function skipOnMyIp(req, _res) {
-	console.log(`my ip was connected: ${req.ip}`);
-	return req.ip === MY_IP && process.env.NODE_ENV === 'production';
+export async function skipOnMyIp(_req, _res) {
+	const myIp = await getIPAddress();
+	const myIpWasConnected = myIp === process.env.MY_IP;
+	// if (myIpWasConnected) console.log(`my ip was connected: ${myIp}`);
+	return myIpWasConnected;
 }
 
 const rateLimiterMiddleware = rateLimit({
@@ -149,6 +150,17 @@ export default server;
 const appServer = server.listen(PORT, () => {
 	console.log(`Server was started at http://localhost:${PORT}`);
 });
+
+export async function getIPAddress() {
+	try {
+		const response = await fetch('https://ip.jaw.dev');
+		const data = await response.text();
+		return data.trim();
+	} catch (error) {
+		console.error('Error fetching IP address:', error);
+		throw error;
+	}
+}
 
 function gracefulShutdown() {
 	console.log('Received kill signal, shutting down gracefully.');
