@@ -3,7 +3,7 @@ import { Server } from 'socket.io';
 
 import rateLimit from 'express-rate-limit';
 import fs from 'fs/promises';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import cors from 'cors';
 import compression from 'compression';
@@ -15,7 +15,7 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 8081;
 
-export async function skipOnMyIp(_req, _res) {
+export async function skipOnMyIp(_req: Request, _res: Response) {
 	const myIp = await getIPAddress();
 	const myIpWasConnected = myIp === process.env.MY_IP;
 	// if (myIpWasConnected) console.log(`my ip was connected: ${myIp}`);
@@ -54,7 +54,7 @@ app.use(
 	}),
 );
 
-app.get('/', async (req, res, next) => {
+app.get('/', async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const index = path.resolve(
 			path.join(process.cwd(), 'public', 'index.html'),
@@ -67,7 +67,7 @@ app.get('/', async (req, res, next) => {
 	}
 });
 
-app.get('/health-check', (req, res) => {
+app.get('/health-check', (req: Request, res: Response) => {
 	return res.status(200).json({
 		message: 'ok',
 		uptime: process.uptime(),
@@ -75,11 +75,11 @@ app.get('/health-check', (req, res) => {
 	});
 });
 
-app.use((req, res, _next) => {
+app.use((req: Request, res: Response, _next: NextFunction) => {
 	return res.status(404).send("Sorry can't find that!");
 });
 
-app.use((err, req, res, _next) => {
+app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
 	console.error(err.stack);
 	return res.status(500).send('Something broke!');
 });
@@ -89,7 +89,7 @@ DEFAULT_MESSAGE += `// Open this page in another browser/tab/phone and start cod
 DEFAULT_MESSAGE += `console.log('Hello, World!');`;
 
 let lastMessage = '';
-let lastSelection = [];
+let lastSelection = [] as any;
 let sockets = new Set();
 let lastCursorPosition = { line: 0, ch: 0 };
 
@@ -167,6 +167,7 @@ function gracefulShutdown() {
 
 	try {
 		sockets.forEach((socket) => {
+			// @ts-ignore
 			socket.disconnect(true);
 		});
 
@@ -182,7 +183,7 @@ function gracefulShutdown() {
 		appServer.close(() => {
 			console.log('Express closed out remaining connections.');
 		});
-	} catch (error) {
+	} catch (error: any) {
 		console.error('Error during shutdown', error);
 	}
 

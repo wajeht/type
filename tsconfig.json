@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "commonjs",
+		"rootDir": "./",
+		"baseUrl": "./src",
+		"resolveJsonModule": true,
+		"outDir": "./dist",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"incremental": true,
+		"removeComments": true,
+		"typeRoots": ["node_modules/@types"]
+	},
+	"include": [
+		"./src/**/*.ts",
+		"./src/**/*.json",
+		"./src/**/*.d.ts",
+		".env",
+		"src/utils/update-css-version.js"
+	],
+	"exclude": ["./public", "src/index.test.ts"]
+}

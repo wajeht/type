@@ -1,26 +1,22 @@
-FROM node:20-alpine AS builder
-
-WORKDIR /usr/src/app
-
-COPY package*.json ./
-RUN npm ci --production
-
-COPY . .
-
 FROM node:20-alpine
 
 RUN apk --no-cache add curl
 
+ENV ENV production
+
 WORKDIR /usr/src/app
 
-COPY --from=builder /usr/src/app ./
+COPY ./package.json ./
+COPY ./package-lock.json ./
 
-RUN addgroup -g 1001 -S appuser && \
-    adduser -u 1001 -S appuser -G appuser
-USER appuser
+COPY ./ ./
+
+RUN npm install
+
+RUN npm run build
 
 EXPOSE 8081
 
-HEALTHCHECK CMD curl -f http://localhost:8081/health-check || exit 1
+HEALTHCHECK CMD curl -f http://localhost:8080/healthz || exit 1
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
