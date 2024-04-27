@@ -13,7 +13,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8080;
 
 export async function skipOnMyIp(_req: Request, _res: Response) {
 	const myIp = await getIPAddress();
