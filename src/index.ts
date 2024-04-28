@@ -13,7 +13,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 80;
 
 export async function skipOnMyIp(_req: Request, _res: Response) {
 	const myIp = await getIPAddress();
@@ -67,7 +67,7 @@ app.get('/', async (req: Request, res: Response, next: NextFunction) => {
 	}
 });
 
-app.get('/health-check', (req: Request, res: Response) => {
+app.get('/healthz', (req: Request, res: Response) => {
 	return res.status(200).json({
 		message: 'ok',
 		uptime: process.uptime(),

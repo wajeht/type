@@ -15,8 +15,8 @@ RUN npm install
 
 RUN npm run build
 
-EXPOSE 8080
+EXPOSE 80
 
-HEALTHCHECK CMD curl -f http://localhost:8080/healthz || exit 1
+HEALTHCHECK CMD curl -f http://localhost:80/healthz || exit 1
 
 CMD ["npm", "run", "start"]
