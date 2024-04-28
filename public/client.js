@@ -1,51 +1,53 @@
-function showNotification() {
-	// Create a div for blur effect
-	const blur = document.createElement('div');
-	blur.id = 'blur';
-	blur.style.position = 'absolute';
-	blur.style.top = '0';
-	blur.style.left = '0';
-	blur.style.width = '100%';
-	blur.style.height = '100%';
-	blur.style.backdropFilter = 'blur(2px)';
-	blur.style.zIndex = '2';
-	document.body.appendChild(blur);
-
-	// Create a div for notification
+function createDiv(id, styles) {
 	const div = document.createElement('div');
-	div.id = 'notification';
-	div.textContent = 'Disconnected from server';
-	div.style.position = 'absolute';
-	div.style.fontFamily = 'Monaco, monospace';
-	div.style.top = '0';
-	div.style.left = '0';
-	div.style.width = '100%';
-	div.style.height = '100%';
-	div.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-	div.style.color = 'white';
-	div.style.fontSize = '2rem';
-	div.style.display = 'flex';
-	div.style.justifyContent = 'center';
-	div.style.alignItems = 'center';
-	div.style.zIndex = '3';
+	div.id = id;
+	Object.assign(div.style, styles);
 	document.body.appendChild(div);
+	return div;
+}
+
+function showNotification() {
+	createDiv('blur', {
+		position: 'absolute',
+		top: '0',
+		left: '0',
+		width: '100%',
+		height: '100%',
+		backdropFilter: 'blur(2px)',
+		zIndex: '2',
+	});
+
+	createDiv('notification', {
+		position: 'absolute',
+		fontFamily: 'Monaco, monospace',
+		top: '0',
+		left: '0',
+		width: '100%',
+		height: '100%',
+		backgroundColor: 'rgba(0, 0, 0, 0.5)',
+		color: 'white',
+		fontSize: '2rem',
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		zIndex: '3',
+		textContent: 'Disconnected from server',
+	});
+}
+
+function removeElementById(id) {
+	const element = document.getElementById(id);
+	if (element) {
+		document.body.removeChild(element);
+	}
 }
 
 function removeNotification() {
-	const notification = document.getElementById('notification');
-	const blur = document.getElementById('blur');
-
-	if (blur) {
-		document.body.removeChild(blur);
-	}
-
-	if (notification) {
-		document.body.removeChild(notification);
-	}
+	removeElementById('notification');
+	removeElementById('blur');
 }
 
 const socket = io.connect('/');
-let isUpdating = false;
 
 const myCodeMirror = CodeMirror(document.body, {
 	value: '',
@@ -59,49 +61,41 @@ const myCodeMirror = CodeMirror(document.body, {
 myCodeMirror.focus();
 
 let remoteCursor = document.getElementById('remote-cursor');
-
 if (!remoteCursor) {
-	remoteCursor = document.createElement('div');
-	remoteCursor.id = 'remote-cursor';
-	document.body.appendChild(remoteCursor);
+	remoteCursor = createDiv('remote-cursor', {});
 }
 
-socket.on('connect', function () {
-	console.log('Connected to server');
+socket.on('connect', () => {
+	// console.log('Connected to server');
 	removeNotification();
 	socket.emit('getLastMessage');
 });
 
 socket.on('disconnect', (reason) => {
-	console.log(`Disconnected: ${reason}`);
+	// console.log(`Disconnected: ${reason}`);
 	showNotification();
 });
 
-myCodeMirror.on('vim-mode-change', function (e) {
-	console.log(e.mode);
+myCodeMirror.on('vim-mode-change', (e) => {
+	// console.log(e.mode);
 	socket.emit('vim-mode-change', e.mode);
 });
 
-socket.on('vim-mode-change', function (mode) {
-	if (mode === 'insert') {
-		remoteCursor.style.width = '2px';
-	} else if (mode === 'normal' || mode === 'visual') {
-		remoteCursor.style.width = '11px';
-	}
+socket.on('vim-mode-change', (mode) => {
+	remoteCursor.style.width = mode === 'insert' ? '2px' : '11px';
 });
 
-myCodeMirror.on('change', function (cm, change) {
+myCodeMirror.on('change', (cm, change) => {
 	if (!isUpdating) {
-		const data = {
+		socket.emit('message', {
 			value: cm.getValue(),
 			cursorPosition: cm.getCursor(),
 			selection: cm.listSelections(),
-		};
-		socket.emit('message', data);
+		});
 	}
 });
 
-myCodeMirror.on('cursorActivity', function (cm) {
+myCodeMirror.on('cursorActivity', (cm) => {
 	if (!isUpdating) {
 		socket.emit('cursorActivity', {
 			cursorPosition: cm.getCursor(),
@@ -110,7 +104,7 @@ myCodeMirror.on('cursorActivity', function (cm) {
 	}
 });
 
-socket.on('message', function (data) {
+socket.on('message', (data) => {
 	isUpdating = true;
 	myCodeMirror.setValue(data.value);
 	myCodeMirror.setCursor(data.cursorPosition);
@@ -118,16 +112,14 @@ socket.on('message', function (data) {
 	isUpdating = false;
 });
 
-socket.on('cursorActivity', function (data) {
+socket.on('cursorActivity', (data) => {
 	isUpdating = true;
 	myCodeMirror.setCursor(data.cursorPosition);
 	myCodeMirror.setSelections(data.selection);
 
 	let cursorCoords = myCodeMirror.cursorCoords(data.cursorPosition);
-
 	remoteCursor.style.left = cursorCoords.left + 'px';
 	remoteCursor.style.top = cursorCoords.top + 'px';
 	remoteCursor.style.height = cursorCoords.bottom - cursorCoords.top + 'px';
-
 	isUpdating = false;
 });

@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 80;
 export async function skipOnMyIp(_req: Request, _res: Response) {
 	const myIp = await getIPAddress();
 	const myIpWasConnected = myIp === process.env.MY_IP;
-	// if (myIpWasConnected) console.log(`my ip was connected: ${myIp}`);
+	if (myIpWasConnected) console.log(`my ip was connected: ${myIp}`);
 	return myIpWasConnected;
 }
 
