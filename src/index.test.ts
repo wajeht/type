@@ -6,7 +6,7 @@ const app = request(server);
 
 describe('server', () => {
 	it('should be able to hit health check', async () => {
-		const response = await app.get('/health-check');
+		const response = await app.get('/healthz');
 		expect(response.status).toBe(200);
 		expect(response.body).toEqual({
 			message: 'ok',
