@@ -32,16 +32,18 @@ const rateLimiterMiddleware = rateLimit({
 });
 
 app.set('trust proxy', 1);
-app.use(helmet({
-	contentSecurityPolicy: {
-		useDefaults: true,
-		directives: {
-			...helmet.contentSecurityPolicy.getDefaultDirectives(),
-			'default-src': ["'self'", 'plausible.jaw.dev'],
-			'script-src': ["'self'", "'unsafe-inline'", 'plausible.jaw.dev'],
+app.use(
+	helmet({
+		contentSecurityPolicy: {
+			useDefaults: true,
+			directives: {
+				...helmet.contentSecurityPolicy.getDefaultDirectives(),
+				'default-src': ["'self'", 'plausible.jaw.dev'],
+				'script-src': ["'self'", "'unsafe-inline'", 'plausible.jaw.dev'],
+			},
 		},
-	},
-}))
+	}),
+);
 
 app.use(cors());
 app.use(compression());
